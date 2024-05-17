@@ -1,169 +1,4 @@
-// import 'package:flutter/material.dart';
-//
-// class ProneAreaPage extends StatefulWidget {
-//   const ProneAreaPage({Key? key}) : super(key: key);
-//
-//   @override
-//   _ProneAreaPageState createState() => _ProneAreaPageState();
-// }
-//
-// class _ProneAreaPageState extends State<ProneAreaPage> {
-//   List<Map<String, List<String>>> proneAreas = [];
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     // Setting up default prone areas
-//     _setDefaultProneAreas();
-//   }
-//
-//   void _setDefaultProneAreas() {
-//     // Prone Area 1
-//     List<String> proneArea1Hospitals = ['Hospital A', 'Hospital B', 'Hospital C'];
-//
-//     Map<String, List<String>> proneArea1 = {
-//       'Hospitals': proneArea1Hospitals,
-//     };
-//
-//     // Prone Area 2
-//     List<String> proneArea2Hospitals = ['Hospital X', 'Hospital Y', 'Hospital Z'];
-//
-//     Map<String, List<String>> proneArea2 = {
-//       'Hospitals': proneArea2Hospitals,
-//     };
-//
-//     // Prone Area 3
-//     List<String> proneArea3Hospitals = ['Hospital X', 'Hospital Y', 'Hospital Z'];
-//
-//     Map<String, List<String>> proneArea3 = {
-//       'Hospitals': proneArea2Hospitals,
-//     };
-//
-//     // Prone Area 4
-//     List<String> proneArea4Hospitals = ['Hospital X', 'Hospital Y', 'Hospital Z'];
-//
-//     Map<String, List<String>> proneArea4 = {
-//       'Hospitals': proneArea2Hospitals,
-//     };
-//
-//     // Adding default prone areas to the list
-//     proneAreas.add(proneArea1);
-//     proneAreas.add(proneArea2);
-//     proneAreas.add(proneArea3);
-//     proneAreas.add(proneArea4);
-//
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Prone Area Page'),
-//       ),
-//       backgroundColor: Colors.grey[200],
-//       body: ListView.builder(
-//         itemCount: proneAreas.length,
-//         itemBuilder: (context, index) {
-//           return _buildProneArea(
-//             title: 'Prone Area ${index + 1}',
-//             hospitals: proneAreas[index]['Hospitals']!,
-//           );
-//         },
-//       ),
-//     );
-//   }
-//
-//   Widget _buildProneArea({
-//     required String title,
-//     required List<String> hospitals,
-//   }) {
-//     return Card(
-//       margin: const EdgeInsets.all(8.0),
-//       elevation: 4.0,
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(10.0),
-//       ),
-//       color: Colors.white,
-//       child: ExpansionTile(
-//         title: Text(
-//           title,
-//           style: const TextStyle(
-//             color: Colors.indigo,
-//             fontSize: 18.0,
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//         children: [
-//           _buildSection(title: 'Hospitals', departments: hospitals),
-//           _buildSendAlertButton(),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildSection({
-//     required String title,
-//     required List<String> departments,
-//   }) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.all(8.0),
-//           child: Text(
-//             title,
-//             style: const TextStyle(
-//               color: Colors.indigo,
-//               fontWeight: FontWeight.bold,
-//               fontSize: 16.0,
-//             ),
-//           ),
-//         ),
-//         for (var department in departments)
-//           ListTile(
-//             title: Text(department),
-//           ),
-//       ],
-//     );
-//   }
-//
-//   Widget _buildSendAlertButton() {
-//     return ElevatedButton(
-//       onPressed: () {
-//         _showAlert();
-//       },
-//       child: const Text('Send Alert'),
-//     );
-//   }
-//
-//   void _showAlert() {
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           title: const Text('Alert Sent'),
-//           content: const Text('Alert has been sent!'),
-//           actions: [
-//             TextButton(
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//               },
-//               child: const Text('OK'),
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-// }
-
-
-
-
-
-
 import 'package:flutter/material.dart';
-
 import 'AllPages.dart';
 import 'Profile.dart';
 
@@ -185,98 +20,86 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
   }
 
   void _setDefaultProneAreas() {
+    // Hardcoded prone areas (for demonstration)
     // Prone Area 1
-    List<String> proneArea1Hospitals = ['Hospital A', 'Hospital B', 'Hospital C'];
+    List<String> taskForce1Hospitals = ['Task Force Medical: Delhi Max Super Speciality Hospital', 'Task Force Fire Brigade: Delhi Fire Service (Government of NCT of Delhi)', 'Task Force Police: Delhi Police'];
 
     Map<String, List<String>> proneArea1 = {
-      'Hospitals': proneArea1Hospitals,
+      'Task Force 1': taskForce1Hospitals,
     };
 
     // Prone Area 2
-    List<String> proneArea2Hospitals = ['Hospital X', 'Hospital Y', 'Hospital Z'];
+    List<String> taskForce2Hospitals = ['Task Force Medical: Wockhardt Hospitals, Mumbai Central', 'Task Force Fire Brigade: Mumbai Fire Brigade', 'Task Force Police: Mumbai Police'];
 
     Map<String, List<String>> proneArea2 = {
-      'Hospitals': proneArea2Hospitals,
+      'Task Force 2': taskForce2Hospitals,
     };
 
     // Prone Area 3
-    List<String> proneArea3Hospitals = ['Hospital X', 'Hospital Y', 'Hospital Z'];
+    List<String> taskForce3Hospitals = ['Task Force Medical: Kerala Herb and Care', 'Task Force Fire Brigade: Kerala Fire Services', 'Task Force Police: Kerala Public Police'];
 
     Map<String, List<String>> proneArea3 = {
-      'Hospitals': proneArea2Hospitals,
-    };
-
-    // Prone Area 4
-    List<String> proneArea4Hospitals = ['Hospital X', 'Hospital Y', 'Hospital Z'];
-
-    Map<String, List<String>> proneArea4 = {
-      'Hospitals': proneArea2Hospitals,
+      'Task Force 3': taskForce3Hospitals,
     };
 
     // Adding default prone areas to the list
     proneAreas.add(proneArea1);
     proneAreas.add(proneArea2);
     proneAreas.add(proneArea3);
-    proneAreas.add(proneArea4);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Prone Area Page'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF2196F3), //  Blue
+                Color(0xFF3F51B5), // Indigo
+                Color(0xFF5E35B1), // Deep Purple
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
+          child: AppBar(
+            title: const Text(
+              'Prone Area Page',
+              style: TextStyle(color: Colors.white), // Set text color to white
+            ),
+            backgroundColor: Colors.transparent, // Make app bar transparent
+          ),
+        ),
       ),
-      backgroundColor: Colors.grey[200],
       body: ListView.builder(
         itemCount: proneAreas.length,
         itemBuilder: (context, index) {
           return _buildProneArea(
             title: 'Prone Area ${index + 1}',
-            hospitals: proneAreas[index]['Hospitals']!,
+            data: proneAreas[index],
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          child: ElevatedButton(
+            onPressed: () {
+              _showTaskForceCreationPopup(context);
+            },
+            child: Text('Create New Task Force'),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: 'About Us',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'My Profile',
-          ),
-        ],
-        currentIndex: 1, // Index 1 corresponds to the current page (ProneAreaPage)
-        onTap: (index) {
-          // Handle navigation here
-          if (index == 0) {
-            // Navigate to the home page (MyApp.dart)
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()),
-            );
-          } else if (index == 1) {
-            // Stay on the current page (ProneAreaPage)
-          } else if (index == 2) {
-            // Navigate to the my profile page
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
-          }
-        },
+        ),
       ),
     );
   }
 
   Widget _buildProneArea({
     required String title,
-    required List<String> hospitals,
+    required Map<String, List<String>> data,
   }) {
     return Card(
       margin: const EdgeInsets.all(8.0),
@@ -295,8 +118,8 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
           ),
         ),
         children: [
-          _buildSection(title: 'Hospitals', departments: hospitals),
-          _buildSendAlertButton(),
+          for (var entry in data.entries)
+            _buildSection(title: entry.key, items: entry.value),
         ],
       ),
     );
@@ -304,7 +127,7 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
 
   Widget _buildSection({
     required String title,
-    required List<String> departments,
+    required List<String> items,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,40 +143,73 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
             ),
           ),
         ),
-        for (var department in departments)
+        for (var item in items)
           ListTile(
-            title: Text(department),
+            title: Text(item),
           ),
       ],
     );
   }
 
-  Widget _buildSendAlertButton() {
-    return ElevatedButton(
-      onPressed: () {
-        _showAlert();
-      },
-      child: const Text('Send Alert'),
-    );
-  }
+  void _showTaskForceCreationPopup(BuildContext context) {
+    String taskForceName = '';
+    String agencyNames = '';
 
-  void _showAlert() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Alert Sent'),
-          content: const Text('Alert has been sent!'),
-          actions: [
-            TextButton(
+          title: Text("Task Force Creation"),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  onChanged: (value) {
+                    taskForceName = value;
+                  },
+                  decoration: InputDecoration(
+                    labelText: "Enter Task Force Name",
+                  ),
+                ),
+                TextField(
+                  onChanged: (value) {
+                    agencyNames = value;
+                  },
+                  decoration: InputDecoration(
+                    labelText: "Enter Agency Names",
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('OK'),
+              child: Text("Close"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Implement adding task force to prone area list
+                setState(() {
+                  _addTaskForce(taskForceName, agencyNames);
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text("Add"),
             ),
           ],
         );
       },
     );
+  }
+
+  void _addTaskForce(String taskForceName, String agencyNames) {
+    List<String> agencies = agencyNames.split(',');
+    Map<String, List<String>> newProneArea = {
+      'Task Force ${proneAreas.length + 1}: $taskForceName': agencies,
+    };
+    proneAreas.add(newProneArea);
   }
 }

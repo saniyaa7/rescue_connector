@@ -37,6 +37,18 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.2.0
   geolocator: ^11.0.0
+  google_maps_flutter: ^2.6.0
+  location: ^5.0.0
+  flutter_polyline_points: ^2.0.0
+  # http: ^1.2.0
+  geocoding: ^2.0.0
+  # geolocator: ^11.0.0
+  google_directions_api: ^0.10.0
+  # google_distance_matrix: ^0.0.1
+  google_places_flutter: ^2.0.8
+  google_maps_flutter_web: ^0.5.7
+  session: ^1.0.0
+  flutter_session_manager: ^1.0.3
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +80,10 @@ flutter:
     - assets/images/EarthQuake.jpg
     - assets/images/Road_Accidents.jpg
     - assets/images/Bomb_blast.jpg
+    - assets/images/rescue_team_image.jpeg
+    - assets/images/succes_story_dehradun.jpeg
+    - assets/images/succes_story_guwahati.jpeg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

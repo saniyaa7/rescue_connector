@@ -328,14 +328,15 @@ import 'package:first/screens/signin.dart';
 // import 'package:your_flutter_app/screens/signin_page.dart'; // Import the file for your sign-in page
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp2());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Your Flutter App',
+      debugShowCheckedModeBanner: false,
       home: SignIn(), // Directly set the sign-in page as the home
     );
   }

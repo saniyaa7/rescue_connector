@@ -215,8 +215,25 @@ class _TaskForceCreationState extends State<TaskForceCreation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Task Force Creation'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF2196F3), // Blue
+                Color(0xFF3F51B5), // Indigo
+                Color(0xFF5E35B1), // Deep Purple
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
+        ),
+        title: Text(
+          'Task Force Creation',
+          style: TextStyle(color: Colors.white), // Set text color to white
+        ),
       ),
+
       backgroundColor: Colors.grey[200],
       body: ListView.builder(
         itemCount: taskForces.length,

@@ -1,273 +1,6 @@
-// import 'package:flutter/material.dart';
-// import 'package:first/reusable_widget/reusable_widget.dart';
-// import 'package:first/screens/signup2.dart';
-// import 'package:first/screens/signin.dart';
-// import 'package:first/utils/colors.dart';
-
-// class SignUpScreen extends StatefulWidget {
-//   const SignUpScreen({Key? key}) : super(key: key);
-// // 
-//   @override
-//   _SignUpScreenState createState() => _SignUpScreenState();
-// }
-
-// class _SignUpScreenState extends State<SignUpScreen> {
-//   TextEditingController _userNameTextController = TextEditingController();
-//   TextEditingController _emailTextController = TextEditingController();
-//   TextEditingController _passwordTextController = TextEditingController();
-//   TextEditingController _areaOfExpertiseController = TextEditingController();
-//   TextEditingController _numberOfMembersController = TextEditingController();
-//   TextEditingController _locationController = TextEditingController();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       extendBodyBehindAppBar: true,
-//       appBar: AppBar(
-//         backgroundColor: Colors.transparent,
-//         elevation: 0,
-//         title: const Text(
-//           "Sign Up",
-//           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//         ),
-//       ),
-//       body: Container(
-//         width: MediaQuery.of(context).size.width,
-//         height: MediaQuery.of(context).size.height,
-//         decoration: BoxDecoration(
-//           gradient: LinearGradient(
-//             colors: [
-//               Color(0xFF5E35B1), // Deep Purple
-//               Color(0xFF3F51B5), // Indigo
-//               Color(0xFF2196F3), // Blue
-//             ],
-//             begin: Alignment.topCenter,
-//             end: Alignment.bottomCenter,
-//           ),
-//         ),
-//         child: SingleChildScrollView(
-//           child: Padding(
-//             padding: EdgeInsets.fromLTRB(20, 120, 20, 0),
-//             child: Column(
-//               children: <Widget>[
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Enter UserName",
-//                   Icons.person_outline,
-//                   false,
-//                   _userNameTextController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Enter Email Id",
-//                   Icons.email,
-//                   false,
-//                   _emailTextController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Enter Password",
-//                   Icons.lock_outlined,
-//                   true,
-//                   _passwordTextController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Area of Expertise",
-//                   Icons.business,
-//                   false,
-//                   _areaOfExpertiseController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Number of Members",
-//                   Icons.people,
-//                   false,
-//                   _numberOfMembersController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Location",
-//                   Icons.location_on,
-//                   false,
-//                   _locationController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 signInSignUpButton(context, false, () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => SignUpScreen1()),
-//                   );
-//                 }),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// Color hexStringToColor(String hexColor) {
-//   int intValue = int.parse(hexColor, radix: 16);
-//   return Color(intValue).withOpacity(1.0);
-// }
-// // 
-// import 'package:flutter/material.dart';
-// import 'package:first/reusable_widget/reusable_widget.dart';
-// import 'package:http/http.dart' as http;
-// import 'config.dart' ;
-
-// class SignUpScreen extends StatefulWidget {
-//   const SignUpScreen({Key? key}) : super(key: key);
-
-//   @override
-//   _SignUpScreenState createState() => _SignUpScreenState();
-// }
-
-// class _SignUpScreenState extends State<SignUpScreen> {
-//   TextEditingController _userNameController = TextEditingController();
-//   TextEditingController _emailController = TextEditingController();
-//   TextEditingController _passwordController = TextEditingController();
-//   TextEditingController _areaOfExpertiseController = TextEditingController();
-//   TextEditingController _numberOfMembersController = TextEditingController();
-//   TextEditingController _locationController = TextEditingController();
-
-//   Future<void> _signUp() async {
-//     final String username = _userNameController.text;
-//     final String email = _emailController.text;
-//     final String password = _passwordController.text;
-//     final String areaOfExpertise = _areaOfExpertiseController.text;
-//     final String numberOfMembers = _numberOfMembersController.text;
-//     final String location = _locationController.text;
-
-//     final String url = 'http://192.168.0.106:3000/api/auth/signup';
-//  // Replace with your actual backend URL
-
-//     try {
-//       final http.Response response = await http.post(
-//         Uri.parse(url),
-//         body: {
-//           'username': username,
-//           'email': email,
-//           'password': password,
-//           'areaOfExpertise': areaOfExpertise,
-//           'numberOfMembers': numberOfMembers,
-//           'location': location,
-//         },
-//       );
-
-//       if (response.statusCode == 200) {
-//         // User signed up successfully
-//         print('User signed up successfully!');
-//         // Handle any further action after successful sign-up (e.g., navigate to home screen)
-//       } else {
-//         // Error occurred during sign-up
-//         print('Error: ${response.body}');
-//         // Display an error message to the user
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(
-//             content: Text('Sign-up failed. Please try again.'),
-//           ),
-//         );
-//       }
-//     } catch (e) {
-//       // Exception occurred
-//       print('Exception occurred: $e');
-//       // Display an error message to the user
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           content: Text('An error occurred. Please try again later.'),
-//         ),
-//       );
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       extendBodyBehindAppBar: true,
-//       appBar: AppBar(
-//         backgroundColor: Colors.transparent,
-//         elevation: 0,
-//         title: const Text(
-//           "Sign Up",
-//           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//         ),
-//       ),
-//       body: Container(
-//         width: MediaQuery.of(context).size.width,
-//         height: MediaQuery.of(context).size.height,
-//         decoration: BoxDecoration(
-//           gradient: LinearGradient(
-//             colors: [
-//               Color(0xFF5E35B1), // Deep Purple
-//               Color(0xFF3F51B5), // Indigo
-//               Color(0xFF2196F3), // Blue
-//             ],
-//             begin: Alignment.topCenter,
-//             end: Alignment.bottomCenter,
-//           ),
-//         ),
-//         child: SingleChildScrollView(
-//           child: Padding(
-//             padding: EdgeInsets.fromLTRB(20, 120, 20, 0),
-//             child: Column(
-//               children: <Widget>[
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Enter UserName",
-//                   Icons.person_outline,
-//                   false,
-//                   _userNameController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Enter Email Id",
-//                   Icons.email,
-//                   false,
-//                   _emailController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Enter Password",
-//                   Icons.lock_outlined,
-//                   true,
-//                   _passwordController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Area of Expertise",
-//                   Icons.business,
-//                   false,
-//                   _areaOfExpertiseController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Number of Members",
-//                   Icons.people,
-//                   false,
-//                   _numberOfMembersController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 reusableTextField(
-//                   "Location",
-//                   Icons.location_on,
-//                   false,
-//                   _locationController,
-//                 ),
-//                 const SizedBox(height: 20),
-//                 signInSignUpButton(context, false, _signUp),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'dart:convert';
 
+import 'package:first/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
@@ -282,6 +15,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _mobileNumber = TextEditingController();
   TextEditingController _areaOfExpertiseController = TextEditingController();
   TextEditingController _numberOfMembersController = TextEditingController();
   TextEditingController _locationController = TextEditingController();
@@ -295,6 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final String username = _userNameController.text;
     final String email = _emailController.text;
     final String password = _passwordController.text;
+    final String mobileNumber = _mobileNumber.text;
     final String areaOfExpertise = _areaOfExpertiseController.text;
     final String numberOfMembers = _numberOfMembersController.text;
     final String location = _locationController.text;
@@ -305,32 +40,52 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     final String url = 'http://localhost:3000/api/auth/signup';
 
+    // Validate password complexity
+    if (password.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Password must be at least 8 characters long.'),
+        ),
+      );
+      return;
+    }
+
+    // Validate mobile number
+    if (mobileNumber.length != 10) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Mobile number must be 10 digits.'),
+        ),
+      );
+      return;
+    }
+
     try {
       Map<String, dynamic> d = {
-          'organization_id' : organization_id,
-          'username': username,
-          'email': email,
-          'password': password,
-          'areaOfExpertise': areaOfExpertise,
-          'numberOfMembers': numberOfMembers,
-          'location': location,
-          'equipments': equipments,
-          'medicalRequirements': medicalRequirements,
-          'communicationEquipments': communicationEquipments,
-          'shelterAndNecessities': shelterAndNecessities,
+        'organization_id': organization_id,
+        'username': username,
+        'email': email,
+        'password': password,
+        'mobileNumber': mobileNumber,
+        'areaOfExpertise': areaOfExpertise,
+        'numberOfMembers': numberOfMembers,
+        'location': location,
+        'equipments': equipments,
+        'medicalRequirements': medicalRequirements,
+        'communicationEquipments': communicationEquipments,
+        'shelterAndNecessities': shelterAndNecessities,
       };
 
-      final http.Response response = await http.post(
-        Uri.parse(url),
-        body: jsonEncode(d),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      );
+      final http.Response response = await http.post(Uri.parse(url),
+          body: jsonEncode(d), headers: {"Content-Type": "application/json"});
 
       if (response.statusCode == 200) {
         print('User signed up successfully!');
         // Navigate to another screen upon successful sign-up if needed
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SignIn()),
+        );
       } else {
         print('Error: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -410,8 +165,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: "Enter Password",
+                  labelText: "Enter Password (min. 8 characters)",
                   prefixIcon: Icon(Icons.lock_outlined),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _mobileNumber,
+                keyboardType: TextInputType.phone,
+                maxLength: 10,
+                decoration: InputDecoration(
+                  labelText: "Enter Mobile Number (10 digits)",
+                  prefixIcon: Icon(Icons.phone),
                   filled: true,
                   fillColor: Colors.white,
                 ),

@@ -657,17 +657,39 @@ class _RequestPageState extends State<RequestPage> {
   void initState() {
     super.initState();
     fetchData();
+    sortNearestAgenciesByLocation();
   }
 
-  Future<void> fetchData() async {
+  Future<void> sortNearestAgenciesByLocation() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:3000/api/auth/data')); // Use port 3000
+    final coordinates = await fetchCoordinates();
+    final latitude = coordinates['latitude'];
+    final longitude = coordinates['longitude'];
+    await getNearestLocations(latitude, longitude);
+  } catch (e) {
+    print('Error: $e');
+  }
+  }
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        print('Fetched data: $data');
+  Future<Map<String, dynamic>> fetchCoordinates() async {
+  final response = await http.get(Uri.parse('http://localhost:3000/api/auth/coordinates'));
 
-        setState(() {
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Failed to fetch coordinates');
+  }
+}
+
+Future<void> getNearestLocations(double latitude, double longitude) async {
+  final response = await http.get(
+    Uri.parse('http://localhost:3000/api/auth/nearest-agencies?latitude=$latitude&longitude=$longitude'),
+  );
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    print('Fetched data: $data');
+    setState(() {
           organizations = data.map<Organization>((orgData) {
             return Organization(
               organization_id: orgData['organization_id'],
@@ -677,7 +699,35 @@ class _RequestPageState extends State<RequestPage> {
               shelter_and_necessity: orgData['shelter_and_necessity'],
             );
           }).toList();
-        });
+            });
+    print(response.body);
+  } else {
+    // Handle failed response
+    print('Failed to get nearest locations: ${response.statusCode}');
+  }
+}
+
+
+
+  Future<void> fetchData() async {
+    try {
+      final response = await http.get(Uri.parse('http://localhost:3000/api/auth/data')); // Use port 3000
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print('Fetched data: $data');
+
+        // setState(() {
+        //   organizations = data.map<Organization>((orgData) {
+        //     return Organization(
+        //       organization_id: orgData['organization_id'],
+        //       equipment: orgData['equipment'],
+        //       medical_requirements: orgData['medical_requirements'],
+        //       communication: orgData['communication'],
+        //       shelter_and_necessity: orgData['shelter_and_necessity'],
+        //     );
+        //   }).toList();
+      
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
       }

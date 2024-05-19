@@ -1,8 +1,12 @@
+import 'package:first/about.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:session/session.dart';
+import 'main.dart'; // Import the main.dart file to navigate back to MyHomePage
+import 'AllPages.dart'; // Import the AboutPage and other necessary pages
+import 'map_functionality/map.dart'; // Import the MapView
 
 class Organization {
   final int organizationId;
@@ -39,6 +43,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   List<Organization> organizations = [];
+  int _currentIndex = 2; // Set the initial index to 2, as this is the Profile Page
 
   @override
   void initState() {
@@ -56,7 +61,6 @@ class _ProfilePageState extends State<ProfilePage> {
         },
         body: jsonEncode({'email': await SessionManager().get("email")}),
       ); // Use port 3000
-
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -109,7 +113,6 @@ class _ProfilePageState extends State<ProfilePage> {
           style: TextStyle(color: Colors.white), // Set text color to white
         ),
       ),
-
       body: organizations.isEmpty
           ? Center(
               child: CircularProgressIndicator(),
@@ -120,6 +123,57 @@ class _ProfilePageState extends State<ProfilePage> {
                 return OrganizationCard(organization: organizations[index]);
               },
             ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.black, // Selected icon color
+        unselectedItemColor: Colors.black, // Unselected icon color
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info),
+            label: 'About Us',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'My Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+        ],
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+
+          // Navigate to different pages based on the index
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyHomePage()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AboutPage()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MapView(latitude: 0.0, longitude: 0.0)),
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -192,7 +246,3 @@ class OrganizationCard extends StatelessWidget {
     );
   }
 }
-
-
-
-

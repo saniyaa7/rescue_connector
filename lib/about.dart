@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
+import 'main.dart'; // Import the main.dart file to navigate back to MyHomePage
+import 'Profile.dart'; // Import the Profile page
+import 'map_functionality/map.dart'; // Import the Map page
+import 'AllPages.dart'; // Import other necessary pages
 
-class AboutPage extends StatelessWidget {
+class AboutPage extends StatefulWidget {
+  @override
+  _AboutPageState createState() => _AboutPageState();
+}
+
+class _AboutPageState extends State<AboutPage> {
+  int _currentIndex = 1; // Set the initial index to 1, as this is the About Page
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +34,6 @@ class AboutPage extends StatelessWidget {
           style: TextStyle(color: Colors.white), // Set text color to white
         ),
       ),
-
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -93,6 +103,57 @@ class AboutPage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.black, // Selected icon color
+        unselectedItemColor: Colors.black, // Unselected icon color
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info),
+            label: 'About Us',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'My Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+        ],
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+
+          // Navigate to different pages based on the index
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyHomePage()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AboutPage()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MapView(latitude: 0.0, longitude: 0.0)),
+            );
+          }
+        },
       ),
     );
   }

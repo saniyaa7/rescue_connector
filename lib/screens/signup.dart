@@ -6,7 +6,6 @@
 // import 'config.dart';
 // import 'package:geolocator/geolocator.dart';
 
-
 // class SignUpScreen extends StatefulWidget {
 //   @override
 //   _SignUpScreenState createState() => _SignUpScreenState();
@@ -138,13 +137,12 @@
 //         SnackBar(content: Text('Location permissions are permanently denied, we cannot request permissions.')),
 //       );
 //       return null;
-//     } 
+//     }
 
 //     return await Geolocator.getCurrentPosition(
 //       desiredAccuracy: LocationAccuracy.high,
 //     );
 //   }
-
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -372,7 +370,7 @@
 //         ),
 //       );
 //       return;
-//     } 
+//     }
 
 //     Position position = await Geolocator.getCurrentPosition(
 //         desiredAccuracy: LocationAccuracy.high);
@@ -642,9 +640,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _latitudeController = TextEditingController();
   TextEditingController _longitudeController = TextEditingController();
   TextEditingController _equipmentsController = TextEditingController();
-  TextEditingController _medicalRequirementsController = TextEditingController();
-  TextEditingController _communicationEquipmentsController = TextEditingController();
-  TextEditingController _shelterAndNecessitiesController = TextEditingController();
+  TextEditingController _medicalRequirementsController =
+      TextEditingController();
+  TextEditingController _communicationEquipmentsController =
+      TextEditingController();
+  TextEditingController _shelterAndNecessitiesController =
+      TextEditingController();
 
   double? _latitude;
   double? _longitude;
@@ -710,12 +711,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final String longitude = _longitudeController.text;
     final String equipments = _equipmentsController.text;
     final String medicalRequirements = _medicalRequirementsController.text;
-    final String communicationEquipments = _communicationEquipmentsController.text;
+    final String communicationEquipments =
+        _communicationEquipmentsController.text;
     final String shelterAndNecessities = _shelterAndNecessitiesController.text;
 
     final String url = 'http://localhost:3000/api/auth/signup';
 
-        // Validate password complexity
+    // Validate password complexity
     if (password.length < 8) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -774,8 +776,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         print('User signed up successfully!');
         // Navigate to another screen upon successful sign-up if needed
         Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SignIn()),);
+          context,
+          MaterialPageRoute(builder: (context) => SignIn()),
+        );
       } else {
         print('Error: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -944,7 +947,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               TextField(
                 controller: _medicalRequirementsController,
                 decoration: InputDecoration(
-                  labelText: "Medical Requirements - Eg. First Aid Kit, Stretchers",
+                  labelText:
+                      "Medical Requirements - Eg. First Aid Kit, Stretchers",
                   prefixIcon: Icon(Icons.healing),
                   filled: true,
                   fillColor: Colors.white,

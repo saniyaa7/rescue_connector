@@ -262,10 +262,9 @@
 //   return Color(intValue).withOpacity(1.0);
 // }
 
-
 // SignIn.dart
 
-// 
+//
 // import 'package:first/AllPages.dart';
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
@@ -513,7 +512,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
-  
+
   Future<void> _signIn() async {
     final String email = _emailTextController.text;
     final String password = _passwordTextController.text;
@@ -571,7 +570,6 @@ class _SignInState extends State<SignIn> {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -645,11 +643,13 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget signInSignUpButton(BuildContext context, bool isSignIn, VoidCallback onPressed) {
+  Widget signInSignUpButton(
+      BuildContext context, bool isSignIn, VoidCallback onPressed) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.blue, backgroundColor: Colors.white, // Customize text color
+        foregroundColor: Colors.blue,
+        backgroundColor: Colors.white, // Customize text color
         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       ),
       child: Text(
@@ -671,7 +671,8 @@ class _SignInState extends State<SignIn> {
         );
       },
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white, backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.red,
         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       ),
       child: Text(
@@ -684,5 +685,3 @@ class _SignInState extends State<SignIn> {
     );
   }
 }
-
-

@@ -1,7 +1,6 @@
 import 'package:first/constant/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-// import 'package:flutter_maps/secrets.dart'; // Stores the Google Maps API Key
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,6 +10,12 @@ import 'dart:convert';
 import 'dart:math' show cos, sqrt, asin;
 
 class MapView extends StatefulWidget {
+  @override
+  final double? latitude;
+  final double? longitude;
+
+  MapView({this.latitude, this.longitude});
+
   @override
   _MapViewState createState() => _MapViewState();
 }
@@ -272,38 +277,49 @@ class _MapViewState extends State<MapView> {
 
   Future<void> _fetchDestinationCoordinates() async {
     try {
-      final response = await http.get(Uri.parse(destinationEndpoint));
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        final double latitude = data[0]['latitude'];
-        final double longitude = data[0]['longitude'];
-        print("$data");
-        _getAddress(
-            Position(
-              latitude: latitude,
-              longitude: longitude,
-              timestamp: DateTime.now(),
-              accuracy: 0.0,
-              altitude: 0.0,
-              altitudeAccuracy: 0.0,
-              heading: 0.0,
-              headingAccuracy: 0.0,
-              speed: 0.0,
-              speedAccuracy: 0.0,
-            ),
-            false);
-        Marker destinationMarker = Marker(
-          markerId: MarkerId('destinationCoordinatesString'),
-          position: LatLng(latitude, longitude),
-          icon: BitmapDescriptor.defaultMarker,
-        );
+      double latitude;
+      double longitude;
 
-        // Adding the markers to the list
-
-        markers.add(destinationMarker);
+      if (widget.latitude != null && widget.longitude != null) {
+        latitude = widget.latitude!;
+        longitude = widget.longitude!;
       } else {
-        throw Exception('Failed to fetch destination coordinates');
+        final response = await http.get(Uri.parse(destinationEndpoint));
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> data = json.decode(response.body);
+          latitude = data[0]['latitude'];
+          longitude = data[0]['longitude'];
+        } else {
+          throw Exception('Failed to fetch destination coordinates');
+        }
       }
+
+      print("Latitude: $latitude, Longitude: $longitude");
+
+      _getAddress(
+        Position(
+          latitude: latitude,
+          longitude: longitude,
+          timestamp: DateTime.now(),
+          accuracy: 0.0,
+          altitude: 0.0,
+          altitudeAccuracy: 0.0,
+          heading: 0.0,
+          headingAccuracy: 0.0,
+          speed: 0.0,
+          speedAccuracy: 0.0,
+        ),
+        false,
+      );
+
+      Marker destinationMarker = Marker(
+        markerId: MarkerId('destinationCoordinatesString'),
+        position: LatLng(latitude, longitude),
+        icon: BitmapDescriptor.defaultMarker,
+      );
+
+      // Adding the markers to the list
+      markers.add(destinationMarker);
     } catch (e) {
       print('Error fetching destination coordinates: $e');
     }

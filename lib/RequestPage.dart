@@ -184,20 +184,6 @@ class AgencyBox extends StatelessWidget {
 }
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import 'package:flutter/material.dart';
 
 // import 'AllPages.dart';
@@ -608,21 +594,6 @@ class AgencyBox extends StatelessWidget {
 }
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
 // import 'dart:convert';
@@ -707,8 +678,6 @@ class AgencyBox extends StatelessWidget {
 //   }
 // }
 
-
-
 //   Future<void> fetchData() async {
 //     try {
 //       final response = await http.get(Uri.parse('http://localhost:3000/api/auth/data')); // Use port 3000
@@ -727,7 +696,7 @@ class AgencyBox extends StatelessWidget {
 //         //       shelter_and_necessity: orgData['shelter_and_necessity'],
 //         //     );
 //         //   }).toList();
-      
+
 //       } else {
 //         throw Exception('Failed to load data: ${response.statusCode}');
 //       }
@@ -858,9 +827,11 @@ class AgencyBox extends StatelessWidget {
 //   }
 // }
 import 'package:flutter/material.dart';
-import './map_functionality/map.dart';
+import './map_functionality/map.dart'; // Ensure this file exists and contains the MapView widget
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
   runApp(MyApp());
@@ -872,7 +843,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: RequestPage(),
       routes: {
-        '/mapView': (context) => MapView(), // Define your MapView widget
+        '/mapView': (context) => MapView(
+            latitude: 0.0, longitude: 0.0), // Define your MapView widget
       },
     );
   }
@@ -884,6 +856,8 @@ class Organization {
   final String medical_requirements;
   final String communication;
   final String shelter_and_necessity;
+  final double latitude;
+  final double longitude;
 
   Organization({
     required this.organization_id,
@@ -891,6 +865,8 @@ class Organization {
     required this.medical_requirements,
     required this.communication,
     required this.shelter_and_necessity,
+    required this.latitude,
+    required this.longitude,
   });
 }
 
@@ -923,18 +899,40 @@ class _RequestPageState extends State<RequestPage> {
   }
 
   Future<Map<String, dynamic>> fetchCoordinates() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/auth/coordinates'));
+    bool serviceEnabled;
+    LocationPermission permission;
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to fetch coordinates');
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
     }
+
+    // Check for location permissions
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // Get current position
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    return {'latitude': position.latitude, 'longitude': position.longitude};
   }
 
   Future<void> getNearestLocations(double latitude, double longitude) async {
     final response = await http.get(
-      Uri.parse('http://localhost:3000/api/auth/nearest-agencies?latitude=$latitude&longitude=$longitude'),
+      Uri.parse(
+          'http://localhost:3000/api/auth/nearest-agencies?latitude=$latitude&longitude=$longitude'),
     );
 
     if (response.statusCode == 200) {
@@ -948,8 +946,11 @@ class _RequestPageState extends State<RequestPage> {
             medical_requirements: orgData['medical_requirements'],
             communication: orgData['communication'],
             shelter_and_necessity: orgData['shelter_and_necessity'],
+            latitude: orgData['latitude'],
+            longitude: orgData['longitude'],
           );
         }).toList();
+        organizations = organizations.reversed.toList();
       });
       print(response.body);
     } else {
@@ -959,7 +960,8 @@ class _RequestPageState extends State<RequestPage> {
 
   Future<void> fetchData() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:3000/api/auth/data'));
+      final response =
+          await http.get(Uri.parse('http://localhost:3000/api/auth/data'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -978,10 +980,18 @@ class _RequestPageState extends State<RequestPage> {
       return organizations;
     } else {
       return organizations.where((org) {
-        return org.equipment.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            org.medical_requirements.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            org.communication.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            org.shelter_and_necessity.toLowerCase().contains(_searchQuery.toLowerCase());
+        return org.equipment
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            org.medical_requirements
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            org.communication
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            org.shelter_and_necessity
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase());
       }).toList();
     }
   }
@@ -1048,7 +1058,8 @@ class _RequestPageState extends State<RequestPage> {
                     itemBuilder: (context, index) {
                       return OrganizationCard(
                         organization: filterOrganizations()[index],
-                        onAlert: () => showAlert(context),
+                        onAlert: (latitude, longitude) =>
+                            showAlert(context, latitude, longitude),
                       );
                     },
                   ),
@@ -1058,7 +1069,7 @@ class _RequestPageState extends State<RequestPage> {
     );
   }
 
-  void showAlert(BuildContext context) {
+  void showAlert(BuildContext context, double latitude, double longitude) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1070,7 +1081,13 @@ class _RequestPageState extends State<RequestPage> {
               child: Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/mapView');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        MapView(latitude: latitude, longitude: longitude),
+                  ),
+                );
               },
             ),
           ],
@@ -1082,7 +1099,7 @@ class _RequestPageState extends State<RequestPage> {
 
 class OrganizationCard extends StatelessWidget {
   final Organization organization;
-  final VoidCallback onAlert;
+  final Function(double, double) onAlert;
 
   OrganizationCard({required this.organization, required this.onAlert});
 
@@ -1095,7 +1112,8 @@ class OrganizationCard extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Organization ID: ${organization.organization_id}', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text('Organization ID: ${organization.organization_id}',
+                style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -1103,7 +1121,8 @@ class OrganizationCard extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Medical Requirements: ${organization.medical_requirements}'),
+            child: Text(
+                'Medical Requirements: ${organization.medical_requirements}'),
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -1111,30 +1130,18 @@ class OrganizationCard extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Shelter and Necessities: ${organization.shelter_and_necessity}'),
+            child: Text(
+                'Shelter and Necessities: ${organization.shelter_and_necessity}'),
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: onAlert,
+              onPressed: () =>
+                  onAlert(organization.latitude, organization.longitude),
               child: Text('Send Alert'),
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class MapView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Map View'),
-      ),
-      body: Center(
-        child: Text('This is the Map View screen'),
       ),
     );
   }

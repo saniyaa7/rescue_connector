@@ -260,6 +260,547 @@
 //   }
 // }
 
+// import 'package:flutter/material.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'package:geolocator/geolocator.dart';
+
+// void main() {
+//   runApp(MyApp1());
+// }
+
+// class MyApp1 extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Image Grid with Camera',
+//       debugShowCheckedModeBanner: false, // Ensure debug banner is removed
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: SecondPage(),
+//     );
+//   }
+// }
+
+// class SecondPage extends StatelessWidget {
+//   final Map<String, String> imageNames = {
+//     'assets/images/fire.jpg': 'Fire Alert',
+//     'assets/images/floods.jpg': 'Flood Alert',
+//     'assets/images/EarthQuake.jpg': 'Earthquake Alert',
+//     'assets/images/Road_Accidents.jpg': 'Road Accident Alert',
+//     'assets/images/Bomb_blast.jpg': 'Bomb Blast Alert',
+//   };
+
+//   Future<void> shareLocation(String imageName, double latitude, double longitude) async {
+//     // Constructing Google Static Maps API URL
+//     String staticMapUrl =
+//         "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=15&size=400x400&markers=color:red%7C$latitude,$longitude&key=YOUR_API_KEY";
+
+//     // Send SMS notification with map image
+//     final response = await http.post(
+//       Uri.parse('http://localhost:3036/sendNotification'),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json',
+//       },
+//       body: jsonEncode({
+//         'imageName': imageName,
+//         'latitude': latitude,
+//         'longitude': longitude,
+//         'mapImageUrl': staticMapUrl,
+//       }),
+//     );
+
+//     if (response.statusCode == 200) {
+//       print('Notification sent successfully');
+//     } else {
+//       print('Failed to send notification. Error: ${response.reasonPhrase}');
+//     }
+//   }
+
+//   Future<void> getCurrentLocationAndShare(String imageName) async {
+//     Position position = await Geolocator.getCurrentPosition(
+//       desiredAccuracy: LocationAccuracy.high,
+//     );
+//     if (position != null) {
+//       double latitude = position.latitude;
+//       double longitude = position.longitude;
+//       await shareLocation(imageName, latitude, longitude);
+//     } else {
+//       print('Unable to retrieve location');
+//     }
+//   }
+
+//   void showPopUp(BuildContext context) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: Text('Success'),
+//           content: Text('Your request has been sent.'),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//               child: Text('OK'),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         flexibleSpace: Container(
+//           decoration: BoxDecoration(
+//             gradient: LinearGradient(
+//               colors: [
+//                 Color(0xFF2196F3), // Blue
+//                 Color(0xFF3F51B5), // Indigo
+//                 Color(0xFF5E35B1), // Deep Purple
+//               ],
+//               begin: Alignment.centerLeft,
+//               end: Alignment.centerRight,
+//             ),
+//           ),
+//         ),
+//         title: Text(
+//           'Calamities',
+//           style: TextStyle(color: Colors.white), // Set text color to white
+//         ),
+//       ),
+//       body: Column(
+//         children: [
+//           Expanded(
+//             child: GridView.builder(
+//               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                 crossAxisCount: 2,
+//                 crossAxisSpacing: 8.0,
+//                 mainAxisSpacing: 8.0,
+//               ),
+//               itemCount: imageNames.length,
+//               itemBuilder: (context, index) {
+//                 final imagePath = imageNames.keys.toList()[index];
+//                 final imageName = imageNames.values.toList()[index];
+//                 return Padding(
+//                   padding: const EdgeInsets.all(8.0),
+//                   child: GestureDetector(
+//                     onTap: () async {
+//                       await getCurrentLocationAndShare(imageName);
+//                       showPopUp(context);
+//                     },
+//                     child: Container(
+//                       decoration: BoxDecoration(
+//                         border: Border.all(color: Colors.grey),
+//                         borderRadius: BorderRadius.circular(8.0),
+//                       ),
+//                       child: ClipRRect(
+//                         borderRadius: BorderRadius.circular(8.0),
+//                         child: Image.asset(
+//                           imagePath,
+//                           fit: BoxFit.cover,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.all(8.0),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 Expanded(
+//                   child: TextField(
+//                     decoration: InputDecoration(
+//                       hintText: 'Type your message here',
+//                     ),
+//                   ),
+//                 ),
+//                 IconButton(
+//                   icon: Icon(Icons.send),
+//                   onPressed: () {
+//                     showPopUp(context);
+//                   },
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+// import 'package:flutter/material.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'package:geolocator/geolocator.dart';
+
+// void main() {
+//   runApp(MyApp1());
+// }
+
+// class MyApp1 extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Image Grid with Camera',
+//       debugShowCheckedModeBanner: false, // Ensure debug banner is removed
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: SecondPage(),
+//     );
+//   }
+// }
+
+// class SecondPage extends StatelessWidget {
+//   final Map<String, String> imageNames = {
+//     'assets/images/fire.jpg': 'Fire Alert',
+//     'assets/images/floods.jpg': 'Flood Alert',
+//     'assets/images/EarthQuake.jpg': 'Earthquake Alert',
+//     'assets/images/Road_Accidents.jpg': 'Road Accident Alert',
+//     'assets/images/Bomb_blast.jpg': 'Bomb Blast Alert',
+//   };
+
+//   Future<void> shareLocation(String imageName, double latitude, double longitude) async {
+//     // Constructing Google Static Maps API URL
+//     String staticMapUrl =
+//         "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=15&size=400x400&markers=color:red%7C$latitude,$longitude&key=YOUR_API_KEY";
+
+//     // Send SMS notification with map image
+//     final response = await http.post(
+//       Uri.parse('http://localhost:3036/sendNotification'),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json',
+//       },
+//       body: jsonEncode({
+//         'imageName': imageName,
+//         'latitude': latitude,
+//         'longitude': longitude,
+//         'mapImageUrl': staticMapUrl,
+//       }),
+//     );
+
+//     if (response.statusCode == 200) {
+//       print('Notification sent successfully');
+//     } else {
+//       print('Failed to send notification. Error: ${response.reasonPhrase}');
+//     }
+//   }
+
+//   Future<void> getCurrentLocationAndShare(String imageName) async {
+//     Position position = await Geolocator.getCurrentPosition(
+//       desiredAccuracy: LocationAccuracy.high,
+//     );
+//     if (position != null) {
+//       double latitude = position.latitude;
+//       double longitude = position.longitude;
+//       await shareLocation(imageName, latitude, longitude);
+//     } else {
+//       print('Unable to retrieve location');
+//     }
+//   }
+
+//   void showPopUp(BuildContext context) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: Text('Success'),
+//           content: Text('Your request has been sent.'),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//               child: Text('OK'),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         flexibleSpace: Container(
+//           decoration: BoxDecoration(
+//             gradient: LinearGradient(
+//               colors: [
+//                 Color(0xFF2196F3), // Blue
+//                 Color(0xFF3F51B5), // Indigo
+//                 Color(0xFF5E35B1), // Deep Purple
+//               ],
+//               begin: Alignment.centerLeft,
+//               end: Alignment.centerRight,
+//             ),
+//           ),
+//         ),
+//         title: Text(
+//           'Calamities',
+//           style: TextStyle(color: Colors.white), // Set text color to white
+//         ),
+//       ),
+//       body: Column(
+//         children: [
+//           Expanded(
+//             child: GridView.builder(
+//               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                 crossAxisCount: 2,
+//                 crossAxisSpacing: 8.0,
+//                 mainAxisSpacing: 8.0,
+//               ),
+//               itemCount: imageNames.length,
+//               itemBuilder: (context, index) {
+//                 final imagePath = imageNames.keys.toList()[index];
+//                 final imageName = imageNames.values.toList()[index];
+//                 return Padding(
+//                   padding: const EdgeInsets.all(8.0),
+//                   child: GestureDetector(
+//                     onTap: () async {
+//                       await getCurrentLocationAndShare(imageName);
+//                       showPopUp(context);
+//                     },
+//                     child: Container(
+//                       decoration: BoxDecoration(
+//                         border: Border.all(color: Colors.grey),
+//                         borderRadius: BorderRadius.circular(8.0),
+//                       ),
+//                       child: ClipRRect(
+//                         borderRadius: BorderRadius.circular(8.0),
+//                         child: Image.asset(
+//                           imagePath,
+//                           fit: BoxFit.cover,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.all(8.0),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 Expanded(
+//                   child: TextField(
+//                     decoration: InputDecoration(
+//                       hintText: 'Type your message here',
+//                     ),
+//                   ),
+//                 ),
+//                 IconButton(
+//                   icon: Icon(Icons.send),
+//                   onPressed: () {
+//                     showPopUp(context);
+//                   },
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+// import 'package:flutter/material.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'package:geolocator/geolocator.dart';
+
+// void main() {
+//   runApp(MyApp1());
+// }
+
+// class MyApp1 extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Image Grid with Camera',
+//       debugShowCheckedModeBanner: false,
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: SecondPage(),
+//     );
+//   }
+// }
+
+// class SecondPage extends StatefulWidget {
+//   @override
+//   _SecondPageState createState() => _SecondPageState();
+// }
+
+// class _SecondPageState extends State<SecondPage> {
+//   final Map<String, String> imageNames = {
+//     'assets/images/fire.jpg': 'Fire Alert',
+//     'assets/images/floods.jpg': 'Flood Alert',
+//     'assets/images/EarthQuake.jpg': 'Earthquake Alert',
+//     'assets/images/Road_Accidents.jpg': 'Road Accident Alert',
+//     'assets/images/Bomb_blast.jpg': 'Bomb Blast Alert',
+//   };
+
+//   final TextEditingController messageController = TextEditingController();
+
+//   Future<void> shareLocation(String imageName, String messageNotification, double latitude, double longitude) async {
+//     String staticMapUrl =
+//         "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=15&size=400x400&markers=color:red%7C$latitude,$longitude&key=YOUR_API_KEY";
+
+//     final response = await http.post(
+//       Uri.parse('http://localhost:3036/sendMessageNotification'),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json',
+//       },
+//       body: jsonEncode({
+//         'imageName': imageName,
+//         'MessageNotification': messageNotification,
+//         'latitude': latitude,
+//         'longitude': longitude,
+//         'mapImageUrl': staticMapUrl,
+//       }),
+//     );
+
+//     if (response.statusCode == 200) {
+//       print('Notification sent successfully');
+//     } else {
+//       print('Failed to send notification. Error: ${response.reasonPhrase}');
+//     }
+//   }
+
+//   Future<void> getCurrentLocationAndShare(String imageName, String messageNotification) async {
+//     Position position = await Geolocator.getCurrentPosition(
+//       desiredAccuracy: LocationAccuracy.high,
+//     );
+//     if (position != null) {
+//       double latitude = position.latitude;
+//       double longitude = position.longitude;
+//       await shareLocation(imageName, messageNotification, latitude, longitude);
+//     } else {
+//       print('Unable to retrieve location');
+//     }
+//   }
+
+//   void showPopUp(BuildContext context) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: Text('Success'),
+//           content: Text('Your request has been sent.'),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//               child: Text('OK'),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         flexibleSpace: Container(
+//           decoration: BoxDecoration(
+//             gradient: LinearGradient(
+//               colors: [
+//                 Color(0xFF2196F3), // Blue
+//                 Color(0xFF3F51B5), // Indigo
+//                 Color(0xFF5E35B1), // Deep Purple
+//               ],
+//               begin: Alignment.centerLeft,
+//               end: Alignment.centerRight,
+//             ),
+//           ),
+//         ),
+//         title: Text(
+//           'Calamities',
+//           style: TextStyle(color: Colors.white),
+//         ),
+//       ),
+//       body: Column(
+//         children: [
+//           Expanded(
+//             child: GridView.builder(
+//               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                 crossAxisCount: 2,
+//                 crossAxisSpacing: 8.0,
+//                 mainAxisSpacing: 8.0,
+//               ),
+//               itemCount: imageNames.length,
+//               itemBuilder: (context, index) {
+//                 final imagePath = imageNames.keys.toList()[index];
+//                 final imageName = imageNames.values.toList()[index];
+//                 return Padding(
+//                   padding: const EdgeInsets.all(8.0),
+//                   child: GestureDetector(
+//                     onTap: () async {
+//                       String messageNotification = messageController.text;
+//                       await getCurrentLocationAndShare(imageName, messageNotification);
+//                       showPopUp(context);
+//                     },
+//                     child: Container(
+//                       decoration: BoxDecoration(
+//                         border: Border.all(color: Colors.grey),
+//                         borderRadius: BorderRadius.circular(8.0),
+//                       ),
+//                       child: ClipRRect(
+//                         borderRadius: BorderRadius.circular(8.0),
+//                         child: Image.asset(
+//                           imagePath,
+//                           fit: BoxFit.cover,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.all(8.0),
+//             child: Row(
+//               children: [
+//                 Expanded(
+//                   child: TextField(
+//                     controller: messageController,
+//                     decoration: InputDecoration(
+//                       hintText: 'Type your message here',
+//                     ),
+//                   ),
+//                 ),
+//                 IconButton(
+//                   icon: Icon(Icons.send),
+//                   onPressed: () async {
+//                     String messageNotification = messageController.text;
+//                     await getCurrentLocationAndShare('', messageNotification);
+//                     showPopUp(context);
+//                   },
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -283,7 +824,12 @@ class MyApp1 extends StatelessWidget {
   }
 }
 
-class SecondPage extends StatelessWidget {
+class SecondPage extends StatefulWidget {
+  @override
+  _SecondPageState createState() => _SecondPageState();
+}
+
+class _SecondPageState extends State<SecondPage> {
   final Map<String, String> imageNames = {
     'assets/images/fire.jpg': 'Fire Alert',
     'assets/images/floods.jpg': 'Flood Alert',
@@ -292,18 +838,23 @@ class SecondPage extends StatelessWidget {
     'assets/images/Bomb_blast.jpg': 'Bomb Blast Alert',
   };
 
-  Future<void> shareLocation(double latitude, double longitude) async {
+  TextEditingController messageController = TextEditingController();
+
+  Future<void> shareLocation(double latitude, double longitude, String messageNotification) async {
     // Constructing Google Static Maps API URL
     String staticMapUrl =
-        "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=15&size=400x400&markers=color:red%7C$latitude,$longitude&key=AIzaSyCj9cp2GBiIvuwKZJuFjp5JI3CPaTlAPlM";
+        "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=15&size=400x400&markers=color:red%7C$latitude,$longitude&key=YOUR_API_KEY";
 
     // Send SMS notification with map image
     final response = await http.post(
-      Uri.parse('http://localhost:3036/sendNotification'),
+      Uri.parse('http://localhost:3036/sendMessageNotification'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
+        'MessageNotfication': messageNotification,
+        'latitude': latitude.toString(),
+        'longitude': longitude.toString(),
         'mapImageUrl': staticMapUrl,
       }),
     );
@@ -315,16 +866,20 @@ class SecondPage extends StatelessWidget {
     }
   }
 
-  Future<void> getCurrentLocationAndShare() async {
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    if (position != null) {
-      double latitude = position.latitude;
-      double longitude = position.longitude;
-      await shareLocation(latitude, longitude);
-    } else {
-      print('Unable to retrieve location');
+  Future<void> getCurrentLocationAndShare(String messageNotification) async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      if (position != null) {
+        double latitude = position.latitude;
+        double longitude = position.longitude;
+        await shareLocation(latitude, longitude, messageNotification);
+      } else {
+        print('Unable to retrieve location');
+      }
+    } catch (e) {
+      print('Error getting location: $e');
     }
   }
 
@@ -387,7 +942,7 @@ class SecondPage extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () async {
-                      await getCurrentLocationAndShare();
+                      await getCurrentLocationAndShare(imageName);
                       showPopUp(context);
                     },
                     child: Container(
@@ -413,22 +968,9 @@ class SecondPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    // Open camera logic goes here
-                    print('Opening Camera');
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Icon(Icons.camera_alt),
-                  ),
-                ),
                 Expanded(
                   child: TextField(
+                    controller: messageController,
                     decoration: InputDecoration(
                       hintText: 'Type your message here',
                     ),
@@ -436,7 +978,9 @@ class SecondPage extends StatelessWidget {
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: () {
+                  onPressed: () async {
+                    String messageNotification = messageController.text;
+                    await getCurrentLocationAndShare(messageNotification);
                     showPopUp(context);
                   },
                 ),
@@ -446,5 +990,12 @@ class SecondPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    messageController.dispose();
+    super.dispose();
   }
 }

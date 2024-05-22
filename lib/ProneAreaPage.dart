@@ -268,6 +268,21 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
               items: entry.value,
               selectedCity: selectedCity,
             ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Define the action you want to perform here
+                    print('Button pressed for $title');
+                  },
+                  child: Text('Send Alert'),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

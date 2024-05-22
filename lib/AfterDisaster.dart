@@ -12,7 +12,10 @@ class AfterDisasterPage extends StatefulWidget {
 
 class _AfterDisasterPageState extends State<AfterDisasterPage> {
   int _currentIndex = 0;
-  List<bool> _expanded = [false, false]; // Track the expanded state of each list item
+  List<bool> _expanded = [
+    false,
+    false
+  ]; // Track the expanded state of each list item
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,8 @@ class _AfterDisasterPageState extends State<AfterDisasterPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MyHomePage()), // Navigate to MyHomePage
+              MaterialPageRoute(
+                  builder: (context) => MyHomePage()), // Navigate to MyHomePage
             );
           },
         ),
@@ -50,12 +54,16 @@ class _AfterDisasterPageState extends State<AfterDisasterPage> {
         children: [
           _buildExpansionTile(
             title: "GUWAHATI: Rescue operations in the Assam floods",
-            content: 'GUWAHATI: Rescue operations in the Assam floods this season have been a big challenge for disaster management agencies, including the Army. While there were complaints of no ration in many relief camps, the rescuers left no stone unturned to reach them with food and relief. The most vulnerable, like pregnant women and the elderly, were taken to safe places with utmost care.',
+            content:
+                'GUWAHATI: Rescue operations in the Assam floods this season have been a big challenge for disaster management agencies, including the Army. While there were complaints of no ration in many relief camps, the rescuers left no stone unturned to reach them with food and relief. The most vulnerable, like pregnant women and the elderly, were taken to safe places with utmost care.',
+            imagePath: 'assets/images/succes_story_guwahati.jpeg',
             index: 0,
           ),
           _buildExpansionTile(
             title: "DEHRADUN/ SILKYARA: The multi-agency operation",
-            content: 'DEHRADUN/ SILKYARA: The multi-agency operation to rescue 41 workers trapped inside the Silkyara tunnel in Uttarkashi finally succeeded after days of ups and downs, waves of hope and despair on Tuesday evening when all of them were safely brought out. The massive effort, unprecedented in its magnitude and ambition, ended an ordeal that lasted 17 days and had the entire government machinery, including the PMO, putting its might behind the evacuation exercise.',
+            content:
+                'DEHRADUN/ SILKYARA: The multi-agency operation to rescue 41 workers trapped inside the Silkyara tunnel in Uttarkashi finally succeeded after days of ups and downs, waves of hope and despair on Tuesday evening when all of them were safely brought out. The massive effort, unprecedented in its magnitude and ambition, ended an ordeal that lasted 17 days and had the entire government machinery, including the PMO, putting its might behind the evacuation exercise.',
+            imagePath: 'assets/images/succes_story_dehradun.jpeg',
             index: 1,
           ),
         ],
@@ -106,7 +114,8 @@ class _AfterDisasterPageState extends State<AfterDisasterPage> {
           } else if (index == 3) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MapView(latitude: 0.0, longitude: 0.0)),
+              MaterialPageRoute(
+                  builder: (context) => MapView(latitude: 0.0, longitude: 0.0)),
             );
           }
         },
@@ -114,11 +123,36 @@ class _AfterDisasterPageState extends State<AfterDisasterPage> {
     );
   }
 
-  Widget _buildExpansionTile({required String title, required String content, required int index}) {
+  Widget _buildExpansionTile(
+      {required String title,
+      required String content,
+      required String imagePath,
+      required int index}) {
     return ExpansionTile(
       title: Text(title),
       trailing: Icon(_expanded[index] ? Icons.expand_less : Icons.expand_more),
       children: [
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              imagePath,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(content),

@@ -840,7 +840,8 @@ class _SecondPageState extends State<SecondPage> {
 
   TextEditingController messageController = TextEditingController();
 
-  Future<void> shareLocation(double latitude, double longitude, String messageNotification) async {
+  Future<void> shareLocation(
+      double latitude, double longitude, String messageNotification) async {
     // Constructing Google Static Maps API URL
     String staticMapUrl =
         "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=15&size=400x400&markers=color:red%7C$latitude,$longitude&key=YOUR_API_KEY";

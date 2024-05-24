@@ -29,19 +29,23 @@ class MyApp extends StatelessWidget {
 
 class Organization {
   final int organization_id;
+  final String username;
   final String equipment;
   final String medical_requirements;
   final String communication;
   final String shelter_and_necessity;
+  final String location;
   final double latitude;
   final double longitude;
 
   Organization({
     required this.organization_id,
+    required this.username,
     required this.equipment,
     required this.medical_requirements,
     required this.communication,
     required this.shelter_and_necessity,
+    required this.location,
     required this.latitude,
     required this.longitude,
   });
@@ -117,15 +121,16 @@ class _RequestPageState extends State<RequestPage> {
         organizations = data
             .map<Organization>((orgData) => Organization(
                   organization_id: orgData['organization_id'],
+                  username: orgData['username'],
                   equipment: orgData['equipment'],
                   medical_requirements: orgData['medical_requirements'],
                   communication: orgData['communication'],
                   shelter_and_necessity: orgData['shelter_and_necessity'],
+                  location: orgData['location'],
                   latitude: double.parse(orgData['latitude'].toString()),
                   longitude: double.parse(orgData['longitude'].toString()),
                 ))
             .toList();
-        organizations = organizations.reversed.toList();
       });
       print(response.body);
     } else {
@@ -384,6 +389,11 @@ class OrganizationCard extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
+            child: Text('User name: ${organization.username}',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
             child: Text('Equipment: ${organization.equipment}'),
           ),
           Padding(
@@ -399,6 +409,10 @@ class OrganizationCard extends StatelessWidget {
             padding: EdgeInsets.all(8.0),
             child: Text(
                 'Shelter and Necessities: ${organization.shelter_and_necessity}'),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('City: ${organization.location}'),
           ),
           Padding(
             padding: EdgeInsets.all(8.0),

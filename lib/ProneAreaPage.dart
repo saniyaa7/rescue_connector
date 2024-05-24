@@ -7,6 +7,7 @@ import 'package:flutter_sms/flutter_sms.dart';
 
 class Organization {
   final int organization_id;
+  final String username;
   final String equipment;
   final String medical_requirements;
   final String communication;
@@ -17,6 +18,7 @@ class Organization {
 
   Organization({
     required this.organization_id,
+    required this.username,
     required this.equipment,
     required this.medical_requirements,
     required this.communication,
@@ -155,6 +157,7 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
         organizations = (data as List).map((orgData) {
           return Organization(
             organization_id: orgData['organization_id'],
+            username: orgData['username'],
             equipment: orgData['equipment'],
             medical_requirements: orgData['medical_requirements'],
             communication: orgData['communication'],
@@ -164,7 +167,6 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
             longitude: orgData['longitude'],
           );
         }).toList();
-        organizations = organizations.reversed.toList();
       });
     } else {
       print('Failed to get nearest locations: ${response.statusCode}');
@@ -355,68 +357,82 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
+              contentPadding: EdgeInsets.zero,
               title: Text("Task Force Creation"),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      onChanged: (value) {
-                        taskForceName = value;
-                      },
-                      decoration: InputDecoration(
-                        labelText: "Enter Task Force Name",
+              content: Container(
+                width: 800, // Specify the width you want for the dialog box
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TextField(
+                          onChanged: (value) {
+                            taskForceName = value;
+                          },
+                          decoration: InputDecoration(
+                            labelText: "Enter Task Force Name",
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      "Select Agencies",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          "Select Agencies",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    _buildAgencyFilterDropdown(selectedFilter!, (newValue) {
-                      setState(() {
-                        selectedFilter = newValue;
-                      });
-                    }),
-                    SizedBox(height: 10),
-                    SingleChildScrollView(
-                      child: Column(
-                        children: organizations.where((org) {
-                          if (selectedFilter == 'All') return true;
-                          return org.location.contains(selectedFilter!);
-                        }).map((org) {
-                          return ListTile(
-                            title: AgencyDetails(
-                              organization: org,
-                              isSelected: selectedOrganizationIds[
-                                      org.organization_id] ??
-                                  false,
-                              onCheckboxChanged: () {
-                                setState(() {
-                                  bool isSelected = selectedOrganizationIds[
-                                          org.organization_id] ??
-                                      false;
-                                  selectedOrganizationIds[org.organization_id] =
-                                      !isSelected;
-                                  if (isSelected) {
-                                    selectedAgencies
-                                        .remove(org.organization_id.toString());
-                                  } else {
-                                    selectedAgencies
-                                        .add(org.organization_id.toString());
-                                  }
-                                });
-                              },
-                            ),
-                          );
-                        }).toList(),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: _buildAgencyFilterDropdown(selectedFilter!,
+                            (newValue) {
+                          setState(() {
+                            selectedFilter = newValue;
+                          });
+                        }),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 10),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: organizations.where((org) {
+                            if (selectedFilter == 'All') return true;
+                            return org.location.contains(selectedFilter!);
+                          }).map((org) {
+                            return ListTile(
+                              title: AgencyDetails(
+                                organization: org,
+                                isSelected: selectedOrganizationIds[
+                                        org.organization_id] ??
+                                    false,
+                                onCheckboxChanged: () {
+                                  setState(() {
+                                    bool isSelected = selectedOrganizationIds[
+                                            org.organization_id] ??
+                                        false;
+                                    selectedOrganizationIds[
+                                        org.organization_id] = !isSelected;
+                                    if (isSelected) {
+                                      selectedAgencies.remove(
+                                          org.organization_id.toString());
+                                    } else {
+                                      selectedAgencies
+                                          .add(org.organization_id.toString());
+                                    }
+                                  });
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               actions: <Widget>[
@@ -663,15 +679,15 @@ class AgencyDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  organization.equipment,
+                  organization.username,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
+                Text('Location: ${organization.location}'),
                 Text('Equipment: ${organization.equipment}'),
                 Text(
                     'Medical Requirements: ${organization.medical_requirements}'),
                 Text(
                     'Shelter & Necessities: ${organization.shelter_and_necessity}'),
-                Text('Location: ${organization.location}'),
               ],
             ),
           ),

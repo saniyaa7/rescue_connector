@@ -1,0 +1,66 @@
+
+--MySQL workbench is used
+
+CREATE DATABASE IF NOT EXISTS major_project;
+
+USE major_project;
+
+CREATE TABLE IF NOT EXISTS users (
+    organization_id INT NOT NULL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    mobileNumber VARCHAR(225) NOT NULL,
+    area_of_expertise VARCHAR(255) NOT NULL,
+    number_of_members INT NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    equipment VARCHAR(255) NOT NULL,
+    medical_requirements VARCHAR(255) NOT NULL,
+    communication VARCHAR(255) NOT NULL,
+    shelter_and_necessity VARCHAR(255) NOT NULL,
+	latitude DOUBLE NOT NULL,
+    longitude DOUBLE NOT NULL
+);
+
+USE major_project;  -- Make sure to use your database name
+
+SELECT * FROM users;
+
+TRUNCATE TABLE users;
+
+SELECT * FROM users WHERE email = 'p@gmail.com';
+
+drop table users;
+drop table public_account;
+
+SELECT * FROM public_account;
+
+CREATE TABLE public_account (
+    latitude DOUBLE,
+    longitude DOUBLE
+);
+
+INSERT INTO public_account (latitude, longitude)
+VALUES (17.66818197209153, 75.92846883359856);
+
+INSERT INTO users (organization_id, username, email, password, mobileNumber, area_of_expertise, number_of_members, location, equipment, medical_requirements, communication, shelter_and_necessity, latitude, longitude) VALUES
+(1, 'user1', 'user1@example.com', 'password1', '1234567890', 'Search and Rescue', 10, 'New York, NY', 'Rescue gear', 'First aid kit', 'Radio', 'Tents', 17.670255451190638, 75.9114791431771),
+(2, 'user2', 'user2@example.com', 'password2', '2345678901', 'Medical Assistance', 15, 'Los Angeles, CA', 'Medical supplies', 'Medicines', 'Satellite phone', 'Blankets', 18.595496437917284, 73.72812465889872),
+(3, 'user3', 'user3@example.com', 'password3', '3456789012', 'Firefighting', 20, 'Chicago, IL', 'Firefighting equipment', 'Oxygen masks', 'Walkie talkies', 'Water containers',18.56552900559977, 73.7708008934526),
+(4, 'user4', 'user4@example.com', 'password4', '4567890123', 'Logistics', 25, 'Houston, TX', 'Logistics gear', 'N/A', 'Mobile phones', 'Food supplies', 18.452831839847622, 73.86465820158759),
+(5, 'user5', 'user5@example.com', 'password5', '5678901234', 'Technical Support', 8, 'Phoenix, AZ', 'Technical equipment', 'N/A', 'Internet connection', 'Portable power',18.575430752447318,73.76500835483688);
+
+ALTER TABLE users
+ADD COLUMN latitude DOUBLE,
+ADD COLUMN longitude DOUBLE,
+ADD COLUMN distance DOUBLE;
+
+
+CREATE TABLE task_force (
+    name VARCHAR(255) PRIMARY KEY
+);
+
+ALTER TABLE users
+ADD COLUMN task_force_name VARCHAR(255),
+ADD CONSTRAINT fk_task_force_name
+FOREIGN KEY (task_force_name) REFERENCES task_force(name)

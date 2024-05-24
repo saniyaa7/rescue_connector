@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'main.dart'; // Import the main.dart file to navigate back to MyHomePage
-import 'Profile.dart'; // Import the Profile page
-import 'map_functionality/map.dart'; // Import the Map page
-import 'AllPages.dart'; // Import other necessary pages
+import 'Profile.dart';
+import 'map_functionality/map.dart';
+import 'AllPages.dart';
 
 class AboutPage extends StatefulWidget {
   @override
@@ -10,7 +9,7 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
-  int _currentIndex = 1; // Set the initial index to 1, as this is the About Page
+  int _currentIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class _AboutPageState extends State<AboutPage> {
         ),
         title: Text(
           'About Rescue Connectors',
-          style: TextStyle(color: Colors.white), // Set text color to white
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -106,8 +105,8 @@ class _AboutPageState extends State<AboutPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        selectedItemColor: Colors.black, // Selected icon color
-        unselectedItemColor: Colors.black, // Unselected icon color
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -131,7 +130,6 @@ class _AboutPageState extends State<AboutPage> {
             _currentIndex = index;
           });
 
-          // Navigate to different pages based on the index
           if (index == 0) {
             Navigator.push(
               context,
@@ -150,7 +148,8 @@ class _AboutPageState extends State<AboutPage> {
           } else if (index == 3) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MapView(latitude: 0.0, longitude: 0.0)),
+              MaterialPageRoute(
+                  builder: (context) => MapView(latitude: 0.0, longitude: 0.0)),
             );
           }
         },

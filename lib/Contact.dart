@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'AllPages.dart';
 import 'about.dart';
 
@@ -74,7 +73,7 @@ class _ContactPageState extends State<ContactPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:
-                              Text('Please enter a valid phone number')),
+                                  Text('Please enter a valid phone number')),
                         );
                       } else {
                         if (!await launch('tel:$phoneNumber')) {
@@ -83,12 +82,11 @@ class _ContactPageState extends State<ContactPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // Set button background color here
+                      backgroundColor: Colors.blue,
                     ),
                     child: const Text(
                       'CALL',
-                      style: TextStyle(
-                          color: Colors.white), // Set text color here
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -99,7 +97,7 @@ class _ContactPageState extends State<ContactPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:
-                              Text('Please enter a valid phone number')),
+                                  Text('Please enter a valid phone number')),
                         );
                       } else {
                         if (!await launch('sms:$phoneNumber')) {
@@ -108,12 +106,11 @@ class _ContactPageState extends State<ContactPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // Set button background color here
+                      backgroundColor: Colors.blue,
                     ),
                     child: const Text(
                       'SMS',
-                      style: TextStyle(
-                          color: Colors.white), // Set text color here
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
@@ -137,24 +134,19 @@ class _ContactPageState extends State<ContactPage> {
             label: 'My Profile',
           ),
         ],
-        currentIndex: 2, // Index 2 corresponds to the current page (ContactPage)
+        currentIndex: 2,
         onTap: (index) {
-          // Handle navigation here
           if (index == 0) {
-            // Navigate to the home page (AllPages.dart)
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => MyApp()),
             );
           } else if (index == 1) {
-            // Navigate to the about us page (AboutPage.dart)
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => AboutPage()),
             );
-          } else if (index == 2) {
-            // Stay on the current page (ContactPage)
-          }
+          } else if (index == 2) {}
         },
       ),
     );

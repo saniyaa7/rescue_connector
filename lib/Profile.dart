@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:session/session.dart';
-import 'main.dart'; // Import the main.dart file to navigate back to MyHomePage
-import 'AllPages.dart'; // Import the AboutPage and other necessary pages
-import 'map_functionality/map.dart'; // Import the MapView
+// import 'package:session/session.dart';
+import 'AllPages.dart';
+import 'map_functionality/map.dart';
+import '/screens/config.dart';
 
 class Organization {
   final int organizationId;
@@ -43,7 +43,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   List<Organization> organizations = [];
-  int _currentIndex = 2; // Set the initial index to 2, as this is the Profile Page
+  int _currentIndex = 2;
+  final String url = '${Config.apiUrl}/data_profile';
 
   @override
   void initState() {
@@ -55,12 +56,12 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       print(await SessionManager().get("email"));
       final response = await http.post(
-        Uri.parse('http://localhost:3000/api/auth/data_profile'),
+        Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode({'email': await SessionManager().get("email")}),
-      ); // Use port 3000
+      );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -99,9 +100,9 @@ class _ProfilePageState extends State<ProfilePage> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0xFF2196F3), // Blue
-                Color(0xFF3F51B5), // Indigo
-                Color(0xFF5E35B1), // Deep Purple
+                Color(0xFF2196F3),
+                Color(0xFF3F51B5),
+                Color(0xFF5E35B1),
               ],
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
@@ -110,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         title: Text(
           'Profile',
-          style: TextStyle(color: Colors.white), // Set text color to white
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: organizations.isEmpty
@@ -125,8 +126,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        selectedItemColor: Colors.black, // Selected icon color
-        unselectedItemColor: Colors.black, // Unselected icon color
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -150,7 +151,6 @@ class _ProfilePageState extends State<ProfilePage> {
             _currentIndex = index;
           });
 
-          // Navigate to different pages based on the index
           if (index == 0) {
             Navigator.push(
               context,
@@ -169,7 +169,8 @@ class _ProfilePageState extends State<ProfilePage> {
           } else if (index == 3) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MapView(latitude: 0.0, longitude: 0.0)),
+              MaterialPageRoute(
+                  builder: (context) => MapView(latitude: 0.0, longitude: 0.0)),
             );
           }
         },
@@ -188,18 +189,20 @@ class OrganizationCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.all(8.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center, // Center the content
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: CircleAvatar( // Add image in a round shape
+            child: CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage('assets/images/rescue_team_image.jpeg'), // Provide path to your image
+              backgroundImage:
+                  AssetImage('assets/images/rescue_team_image.jpeg'),
             ),
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Organization ID: ${organization.organizationId}', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text('Organization ID: ${organization.organizationId}',
+                style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -231,7 +234,8 @@ class OrganizationCard extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Medical Requirements: ${organization.medicalRequirements}'),
+            child: Text(
+                'Medical Requirements: ${organization.medicalRequirements}'),
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -239,7 +243,8 @@ class OrganizationCard extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Shelter and Necessities: ${organization.shelterAndNecessity}'),
+            child: Text(
+                'Shelter and Necessities: ${organization.shelterAndNecessity}'),
           ),
         ],
       ),

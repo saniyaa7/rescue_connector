@@ -6,6 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:convert';
+import '/screens/config.dart';
 
 import 'dart:math' show cos, sqrt, asin;
 
@@ -23,13 +24,12 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   CameraPosition _initialLocation = CameraPosition(target: LatLng(0.0, 0.0));
   late GoogleMapController mapController;
+  final String destinationEndpoint = '${Config.apiUrl}/coordinates';
 
   late Position _currentPosition;
   String _currentAddress = '';
   String _destinationAddressDemo = '';
 
-  final String destinationEndpoint =
-      'http://localhost:3000/api/auth/coordinates';
   final startAddressController = TextEditingController();
   final destinationAddressController = TextEditingController();
 

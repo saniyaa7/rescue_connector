@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '/screens/config.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 
 class Organization {
   final int organization_id;
@@ -38,6 +39,9 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
   List<Organization> organizations = [];
   String selectedCity = 'All';
   TextEditingController searchController = TextEditingController();
+  final taskForceUrl = '${Config.apiUrl}/task-forces';
+  final usersUrl = '${Config.apiUrl}/data-with-task-force';
+  final updateTaskForceUrl = '${Config.apiUrl}/update-task-force';
 
   @override
   void initState() {
@@ -47,28 +51,20 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
   }
 
   void _setDefaultProneAreas() async {
-    // Assuming you have an API endpoint that returns data from the right join of task_force and users tables
-    final taskForceUrl = 'http://localhost:3000/api/auth/task-forces';
-    final usersUrl = 'http://localhost:3000/api/auth/data-with-task-force';
-
     try {
-      // Fetch data from the task_force endpoint
       final taskForceResponse = await http.get(Uri.parse(taskForceUrl));
       if (taskForceResponse.statusCode == 200) {
-        // Parse the task_force response data
         final taskForceData = json.decode(taskForceResponse.body);
 
-        print(taskForceData); // Iterate over task_force data
+        print(taskForceData);
         for (final taskForce in taskForceData) {
           if (taskForce is Map<String, dynamic>) {
             final taskForceName = taskForce['name'];
             final List<String> users = [];
 
-            // Fetch users data for the current task_force name
             final usersResponse = await http
                 .get(Uri.parse('$usersUrl?task_force_name="${taskForceName}"'));
             if (usersResponse.statusCode == 200) {
-              // Parse the users response data
               final userData = json.decode(usersResponse.body);
               if (userData != null &&
                   userData['data_with_task_force'] != null) {
@@ -79,8 +75,9 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
 
                   final String expertise = user['area_of_expertise'];
                   final String location = user['location'];
+                  final String phone = user['mobileNumber'];
                   users.add(
-                      '$username\nExpertise: $expertise\nLocation: $location');
+                      '$username\nExpertise: $expertise\nPhone Number: $phone\nLocation: $location');
                 }
               } else {
                 print('Invalid or missing user data in the response');
@@ -90,14 +87,12 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
                   'Failed to fetch users for task force $taskForceName: ${usersResponse.statusCode}');
             }
 
-            // Add task_force data with associated users to proneAreas
             proneAreas.add({taskForceName: users});
           } else {
             print('Invalid task force data found: $taskForce');
           }
         }
 
-        // Refresh UI
         setState(() {});
       } else {
         print('Failed to fetch task forces: ${taskForceResponse.statusCode}');
@@ -122,13 +117,11 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return Future.error('Location services are disabled.');
     }
 
-    // Check for location permissions
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -142,7 +135,6 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    // Get current position
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
@@ -153,7 +145,7 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
       double latitude, double longitude, String city) async {
     final response = await http.get(
       Uri.parse(
-          'http://localhost:3000/api/auth/nearest-agencies?latitude=$latitude&longitude=$longitude&city=$city'),
+          '${Config.apiUrl}/nearest-agencies?latitude=$latitude&longitude=$longitude&city=$city'),
     );
 
     if (response.statusCode == 200) {
@@ -174,7 +166,6 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
         }).toList();
         organizations = organizations.reversed.toList();
       });
-      // print(response.body);
     } else {
       print('Failed to get nearest locations: ${response.statusCode}');
     }
@@ -200,10 +191,9 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
           child: AppBar(
             title: const Text(
               'Prone Area Page',
-              style: TextStyle(color: Colors.white), // Set text color to white
+              style: TextStyle(color: Colors.white),
             ),
             backgroundColor: Colors.transparent,
-            // Make app bar transparent
           ),
         ),
       ),
@@ -274,9 +264,20 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    // Define the action you want to perform here
-                    print('Button pressed for $title');
+                  onPressed: () async {
+                    List<String> phoneNumbers = [];
+                    for (var entry in data.entries) {
+                      for (var user in entry.value) {
+                        print("==============${user}");
+                        // Extract phone numbers from the user details
+                        var phoneNumber = extractPhoneNumber(user);
+                        if (phoneNumber != null) {
+                          phoneNumbers.add(phoneNumber);
+                        }
+                      }
+                    }
+                    String message = _constructMessage(title, data);
+                    _sendSMS(phoneNumbers, message);
                   },
                   child: Text('Send Alert'),
                 ),
@@ -286,6 +287,29 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
         ],
       ),
     );
+  }
+
+  String _constructMessage(String title, Map<String, List<String>> data) {
+    String members = '';
+    for (var entry in data.entries) {
+      members += '${entry.key}:\n';
+      for (var user in entry.value) {
+        members += '$user\n';
+      }
+    }
+    String message =
+        "You have been added to the task force '$title'. Members present:\n$members";
+    return message;
+  }
+
+  String? extractPhoneNumber(String userDetail) {
+    // Regular expression to find the phone number following the "Phone Number:" pattern
+    RegExp regExp = RegExp(r'Phone Number:\s*(\d{10})');
+    Match? match = regExp.firstMatch(userDetail);
+    if (match != null) {
+      return match.group(1); // Return the phone number (first capturing group)
+    }
+    return null;
   }
 
   Widget _buildSection({
@@ -323,7 +347,7 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
     String taskForceName = '';
     List<String> selectedAgencies = [];
     Map<int, bool> selectedOrganizationIds = {};
-    String? selectedFilter = 'All'; // Default filter value
+    String? selectedFilter = 'All';
 
     showDialog(
       context: context,
@@ -356,7 +380,6 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
                     _buildAgencyFilterDropdown(selectedFilter!, (newValue) {
                       setState(() {
                         selectedFilter = newValue;
-                        // Perform filtering logic here based on selected filter
                       });
                     }),
                     SizedBox(height: 10),
@@ -440,7 +463,10 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
           value: 'Pune',
           child: Text('Pune'),
         ),
-        // Add more filter options as needed
+        DropdownMenuItem(
+          value: 'Sangli',
+          child: Text('Sangli'),
+        ),
       ],
     );
   }
@@ -467,13 +493,12 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
           );
         },
       );
-      return; // Exit the method if task force name is empty
+      return;
     }
 
     try {
-      // Step 1: Create the task force and get its ID
       final taskForceResponse = await http.post(
-        Uri.parse('http://localhost:3000/api/auth/task-forces'),
+        Uri.parse(taskForceUrl),
         body: json.encode({'name': taskForceName}),
         headers: {'Content-Type': 'application/json'},
       );
@@ -482,9 +507,8 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
 
         bool updateFailed = false;
         for (final agencyId in selectedAgencies) {
-          // Step 2: Update the users table with the task force name
           final updateResponse = await http.put(
-            Uri.parse('http://localhost:3000/api/auth/update-task-force'),
+            Uri.parse(updateTaskForceUrl),
             body: json.encode({
               'organization_id': agencyId,
               'task_force_name': taskForceName
@@ -496,9 +520,8 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
             print('Failed to update task force name for user $agencyId');
             updateFailed = true;
 
-            // Call API to delete the task force
             final deleteResponse = await http.delete(
-              Uri.parse('http://localhost:3000/api/auth/task-forces'),
+              Uri.parse(taskForceUrl),
               body: json.encode({
                 'name': taskForceName,
               }),
@@ -511,7 +534,6 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
               print(
                   'Failed to delete task force: ${deleteResponse.statusCode}');
             }
-            // Show alert
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -534,10 +556,7 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
           }
         }
 
-        if (!updateFailed) {
-          // Step 3: Reload the data after adding the task force
-          // sortNearestAgenciesByLocation(selectedCity);
-        }
+        if (!updateFailed) {}
       } else if (taskForceResponse.statusCode == 500) {
         print('Task force name already exists');
         showDialog(
@@ -579,6 +598,35 @@ class _ProneAreaPageState extends State<ProneAreaPage> {
           );
         },
       );
+    }
+  }
+
+  _sendSMS(List<String> recipients, String message) async {
+    try {
+      String _result = await sendSMS(
+          message: message, recipients: recipients, sendDirect: true);
+      print(_result);
+      print(message);
+      // Show success dialogue if the SMS is sent successfully
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Success"),
+            content: Text("Message sent successfully!"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (onError) {
+      print(onError);
     }
   }
 }

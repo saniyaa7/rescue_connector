@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'AllPages.dart';
-import 'main.dart'; // Import the main.dart file to navigate back to MyHomePage
-import 'Profile.dart'; // Import the Profile page
-import 'map_functionality/map.dart'; // Import the Map page
-import 'about.dart'; // Import the About page
+import 'Profile.dart';
+import 'map_functionality/map.dart';
+import 'about.dart';
 
 class AfterDisasterPage extends StatefulWidget {
   @override
@@ -12,10 +11,7 @@ class AfterDisasterPage extends StatefulWidget {
 
 class _AfterDisasterPageState extends State<AfterDisasterPage> {
   int _currentIndex = 0;
-  List<bool> _expanded = [
-    false,
-    false
-  ]; // Track the expanded state of each list item
+  List<bool> _expanded = [false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +19,16 @@ class _AfterDisasterPageState extends State<AfterDisasterPage> {
       appBar: AppBar(
         title: Text(
           'After Disaster',
-          style: TextStyle(color: Colors.white), // App bar text color
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.transparent, // App bar background color
+        backgroundColor: Colors.transparent,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0xFF2196F3), // Blue
-                Color(0xFF3F51B5), // Indigo
-                Color(0xFF5E35B1), // Deep Purple
+                Color(0xFF2196F3),
+                Color(0xFF3F51B5),
+                Color(0xFF5E35B1),
               ],
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
@@ -44,8 +40,7 @@ class _AfterDisasterPageState extends State<AfterDisasterPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => MyHomePage()), // Navigate to MyHomePage
+              MaterialPageRoute(builder: (context) => MyHomePage()),
             );
           },
         ),
@@ -70,8 +65,8 @@ class _AfterDisasterPageState extends State<AfterDisasterPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        selectedItemColor: Colors.black, // Selected icon color
-        unselectedItemColor: Colors.black, // Unselected icon color
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -95,7 +90,6 @@ class _AfterDisasterPageState extends State<AfterDisasterPage> {
             _currentIndex = index;
           });
 
-          // Navigate to different pages based on the index
           if (index == 0) {
             Navigator.push(
               context,
@@ -141,7 +135,7 @@ class _AfterDisasterPageState extends State<AfterDisasterPage> {
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 5,
                 blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: Offset(0, 3),
               ),
             ],
           ),
